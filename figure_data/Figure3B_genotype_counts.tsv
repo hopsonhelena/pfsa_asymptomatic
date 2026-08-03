@@ -1,0 +1,33 @@
+Country	Variant	HbS_genotype	Pfsa_status	count	total_within_HbS	proportion	Study_source
+Gambia	Pfsa1	AA	plus	560	2007	0.279023418036871	Previously published in Band et al 2022
+Gambia	Pfsa1	AA	minus	1447	2007	0.720976581963129	Previously published in Band et al 2022
+Gambia	Pfsa3	AA	plus	828	1939	0.427024239298608	Previously published in Band et al 2022
+Gambia	Pfsa3	AA	minus	1111	1939	0.572975760701392	Previously published in Band et al 2022
+Kenya	Pfsa1	AA	plus	200	1704	0.117370892018779	Previously published in Band et al 2022
+Kenya	Pfsa1	AA	minus	1504	1704	0.882629107981221	Previously published in Band et al 2022
+Kenya	Pfsa3	AA	plus	220	1683	0.130718954248366	Previously published in Band et al 2022
+Kenya	Pfsa3	AA	minus	1463	1683	0.869281045751634	Previously published in Band et al 2022
+Gambia	Pfsa1	AS	plus	10	15	0.666666666666667	Previously published in Band et al 2022
+Gambia	Pfsa1	AS	minus	5	15	0.333333333333333	Previously published in Band et al 2022
+Gambia	Pfsa3	AS	plus	16	16	1	Previously published in Band et al 2022
+Gambia	Pfsa3	AS	minus	0	16	0	Previously published in Band et al 2022
+Kenya	Pfsa1	AS	plus	25	29	0.862068965517241	Previously published in Band et al 2022
+Kenya	Pfsa1	AS	minus	4	29	0.137931034482759	Previously published in Band et al 2022
+Kenya	Pfsa3	AS	plus	24	29	0.827586206896552	Previously published in Band et al 2022
+Kenya	Pfsa3	AS	minus	5	29	0.172413793103448	Previously published in Band et al 2022
+Ghana	Pfsa1	AA	plus	38	1255	0.0302788844621514	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa1	AS	plus	12	30	0.4	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa1	AA	minus	1217	1255	0.969721115537849	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa1	AS	minus	18	30	0.6	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa3	AA	plus	37	1248	0.0296474358974359	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa3	AS	plus	16	32	0.5	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa3	AA	minus	1211	1248	0.970352564102564	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Ghana	Pfsa3	AS	minus	16	32	0.5	Estimated from Hamilton et al. 2026 by taking  Supplementary Figure 3 Pfsa frequency by sickle status, multiplied by genotyped N from Supplementary Table 1, rounded to whole individuals so plus + minus equals the genotyped N
+Cameroon	Pfsa1	AA	minus	768	815	0.942331288343558	This study
+Cameroon	Pfsa1	AS	minus	16	194	0.0824742268041237	This study
+Cameroon	Pfsa1	AA	plus	47	815	0.0576687116564417	This study
+Cameroon	Pfsa1	AS	plus	178	194	0.917525773195876	This study
+Cameroon	Pfsa3	AA	minus	572	633	0.903633491311216	This study
+Cameroon	Pfsa3	AS	minus	5	251	0.0199203187250996	This study
+Cameroon	Pfsa3	AA	plus	61	633	0.0963665086887836	This study
+Cameroon	Pfsa3	AS	plus	246	251	0.9800796812749	This study

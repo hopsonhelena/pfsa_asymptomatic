@@ -1,0 +1,9 @@
+Variant	Group	Odds_ratio	CI_95_lower	CI_95_upper	N	P_value	Estimate_source
+Pfsa1	Gambia (severe)	3.41	1.51	7.72	2025	0.00238	Published OR/CI (additive) from Band et al 2022, Supplementary Table 2
+Pfsa1	Kenya (severe)	24.64	10.66	59.96	1741	4.52e-14	Published OR/CI (additive) from Band et al 2022, Supplementary Table 2
+Pfsa1	Ghana (mild)	16.69	7.37	37.8	1286	1.46e-11	Calculated OR and CI using published beta and standard error from Hamilton et al 2026, Supplementary Table 1
+Pfsa1	Cameroon (asymptomatic)	59.5442658611232	29.4248430725874	120.494086856938	1011	6.34847e-30	Unadjusted HPTest; OR/CI calculated from beta and standard error output from HPTest in this study
+Pfsa3	Gambia (severe)	22.49	3.04	166.27	1958	0.00143	Published OR/CI (additive) from Band et al 2022, Supplementary Table 2
+Pfsa3	Kenya (severe)	18.45	8.33	40.89	1719	4.52e-13	Published OR/CI (additive) from Band et al 2022, Supplementary Table 2
+Pfsa3	Ghana (mild)	23.74	10.99	51.28	1281	8.14e-16	Calculated OR and CI using published beta and standard error from Hamilton et al 2026, Supplementary Table 1
+Pfsa3	Cameroon (asymptomatic)	128.536125870092	55.412952163901	298.152958983751	885	1.13998e-29	Unadjusted HPTest; OR/CI calculated from beta and standard error output from HPTest in this study
