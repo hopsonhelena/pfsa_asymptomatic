@@ -21,5 +21,5 @@ inputs/        the external files the scripts read to build the data tables
 
 - `inputs/metadata.tsv` - reduced export of the per-sample metadata from Supplementary Table 9 containing only columns used by figure scripts
 
-- `hptest_no_covariates.csv` — unadjusted association-test output, used for
+- `inputs/hptest_no_covariates.csv` — unadjusted association-test output, used for
   the Cameroon Pfsa1/Pfsa3 odds ratios in Figure 3.
