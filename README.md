@@ -1,6 +1,6 @@
 # Pfsa and sickle hemoglobin in asymptomatic *P.falciparum* infection
 
-Scripts for the four main figures in the manuscript.
+Scripts for figures and analysis in the manuscript:
 
 Hopson HD, et al. *Sickle cell status skews malaria parasite genotype at infection*. bioRxiv (2025). doi: https://doi.org/10.1101/2025.09.09.675015
 
