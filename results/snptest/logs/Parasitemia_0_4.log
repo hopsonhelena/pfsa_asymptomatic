@@ -1,0 +1,63 @@
+Welcome to SNPTEST v2.5.2 (revision 2a8e744975fbd46cc3c020721719dd415da0cb89)
+© University of Oxford 2008-2015
+https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest.html
+Read LICENCE file for conditions of use.
+
+==============
+
+Data Files : 
+ -gen files : cameroon_hbb_genotypes_1701_infected_samples.vcf.gz 
+ -sample files : cameroon_1701_infected_samples.sample 
+
+Tests : 
+ -frequentist : 1
+ -method threshold
+
+reading sample exclusion lists
+
+Inspecting data (this may take some time)...
+Sample and exclusions summary :
+ - Number of individuals in : (cohort 1) 
+                              1701       
+
+
+Reading sample files :
+Summary of covariates and phenotypes
+ # discrete variables : 2
+  Village : type = D (Discrete covariate)
+  Season : type = D (Discrete covariate)
+ # continuous variables : 0
+ # phenotypes : 5
+  SERA2_poly : type = B (Binary phenotype)
+  AMA1_poly : type = B (Binary phenotype)
+  AMA1_coi : type = P (Continuous phenotype)
+  SERA2_coi : type = P (Continuous phenotype)
+  Parasitemia_0_4 : type = P (Continuous phenotype)
+Covariate summary :
+  (no covariates in use.)
+Phenotype summary :
+  Parasitemia_0_4 :                 missing  min      max      mean     variance
+                    (unnormalised): 0        0.0000   4.0000   1.7837   1.2838  
+                      (normalised): 0        -1.5742  1.9561   0.0000   1.0000  
+
+You have specified the following model:
+  Parasitemia_0_4 ~ (baseline) + (genotype)
+
+Phenotype being used : Parasitemia_0_4
+
+Data Summaries : 
+ -number of SNPs = (unknown)
+
+Data with missing genotype data threshold and exclusion list applied :
+ cameroon_hbb_genotypes_1701_infected_samples.vcf.gz : 1701
+
+--------------------------------------------------------------------------
+
+SinglePhenotypeTest
+--------------------------------------------------------------------------
+
+Analyzing Data :
+ scanning... read chunk [1 of (unknown)]... done.
+ scanning... no more data.
+
+finito

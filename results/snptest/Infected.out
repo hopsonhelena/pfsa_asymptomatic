@@ -1,0 +1,15 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:20"
+#  started: 2026-08-10 18:08:21
+# 
+# Analysis properties:
+#   -data cameroon_hbb_genotypes_2246_samples.vcf.gz cameroon_2246_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/Infected.out (user-supplied)
+#   -pheno Infected (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total cases_AA cases_AB cases_BB cases_NULL cases_total controls_AA controls_AB controls_BB controls_NULL controls_total all_maf cases_maf controls_maf missing_data_proportion het_OR het_OR_lower het_OR_upper hom_OR hom_OR_lower hom_OR_upper all_OR all_OR_lower all_OR_upper frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1805 439 2 0 1805 439 2 0 2246 1379 320 2 0 1701 426 119 0 0 545 0.0986198 0.0952381 0.109174 0 0.830708 0.655529 1.0527 NA NA NA 0.858912 0.687824 1.07256 0.160702 NA -0.169605 0.119946 NA
+. . 11 5227013 A G 2 1 1 42 551 1653 0 42 551 1653 0 2246 31 417 1253 0 1701 11 134 400 0 545 0.141362 0.1408 0.143119 0 1.10424 0.540254 2.25697 1.11153 0.553621 2.23168 1.01923 0.838552 1.23883 0.847661 NA 0.0192492 0.100088 NA
+# Completed successfully at 2026-08-10 18:08:21

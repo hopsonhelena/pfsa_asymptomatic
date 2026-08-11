@@ -1,0 +1,16 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:20"
+#  started: 2026-08-10 18:08:21
+# 
+# Analysis properties:
+#   -cov_names Village Season (user-supplied)
+#   -data cameroon_hbb_genotypes_1701_infected_samples.vcf.gz cameroon_1701_infected_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/SERA2_coi_Village_Season.out (user-supplied)
+#   -pheno SERA2_coi (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total all_maf missing_data_proportion frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1298 303 2 0 1298 303 2 0 1603 0.095758 0 0.0187046 NA -0.148536 0.0631052 NA
+. . 11 5227013 A G 2 1 1 30 396 1177 0 30 396 1177 0 1603 0.142233 0 0.0638703 NA -0.0945044 0.0509629 NA
+# Completed successfully at 2026-08-10 18:08:21

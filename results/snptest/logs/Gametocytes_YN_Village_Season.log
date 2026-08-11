@@ -1,0 +1,65 @@
+Welcome to SNPTEST v2.5.2 (revision 2a8e744975fbd46cc3c020721719dd415da0cb89)
+© University of Oxford 2008-2015
+https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest.html
+Read LICENCE file for conditions of use.
+
+==============
+
+Data Files : 
+ -gen files : cameroon_hbb_genotypes_2246_samples.vcf.gz 
+ -sample files : cameroon_2246_samples.sample 
+
+Tests : 
+ -frequentist : 1
+ -method threshold -cov Village Season 
+
+
+reading sample exclusion lists
+
+Inspecting data (this may take some time)...
+Sample and exclusions summary :
+ - Number of individuals in : (cohort 1) 
+                              2246       
+
+
+Reading sample files :
+Summary of covariates and phenotypes
+ # discrete variables : 2
+  Village : type = D (Discrete covariate)
+  Season : type = D (Discrete covariate)
+ # continuous variables : 0
+ # phenotypes : 4
+  Infected : type = B (Binary phenotype)
+  Gametocytes_YN : type = B (Binary phenotype)
+  Parasitemia_0_4 : type = P (Continuous phenotype)
+  Infected_microscopy : type = B (Binary phenotype)
+Covariate summary :
+  Village             : missing  levels
+                        0        abembe(31) adoum(46) ekaliII(104) ekokoII(633) koumouI(449) mekomba(177) metet(117) mfida(68) ndangueng(113) nkassomo(184)... (+ 1 other levels)
+  Season              : missing  levels
+                        0        S1(1130) S2(468) S3(648)
+Phenotype summary :
+  Gametocytes_YN      : missing  levels
+                        0        0(1921) 1(325)
+
+You have specified the following model:
+  Gametocytes_YN ~ (baseline) + (genotype) + Village + Season
+
+Phenotype being used : Gametocytes_YN
+
+Data Summaries : 
+ -number of SNPs = (unknown)
+
+Data with missing genotype data threshold and exclusion list applied :
+ cameroon_hbb_genotypes_2246_samples.vcf.gz : 2246
+
+--------------------------------------------------------------------------
+
+SinglePhenotypeTest
+--------------------------------------------------------------------------
+
+Analyzing Data :
+ scanning... read chunk [1 of (unknown)]... done.
+ scanning... no more data.
+
+finito

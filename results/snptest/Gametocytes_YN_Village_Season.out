@@ -1,0 +1,16 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:22"
+#  started: 2026-08-10 18:08:22
+# 
+# Analysis properties:
+#   -cov_names Village Season (user-supplied)
+#   -data cameroon_hbb_genotypes_2246_samples.vcf.gz cameroon_2246_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/Gametocytes_YN_Village_Season.out (user-supplied)
+#   -pheno Gametocytes_YN (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total cases_AA cases_AB cases_BB cases_NULL cases_total controls_AA controls_AB controls_BB controls_NULL controls_total all_maf cases_maf controls_maf missing_data_proportion het_OR het_OR_lower het_OR_upper hom_OR hom_OR_lower hom_OR_upper all_OR all_OR_lower all_OR_upper frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1805 439 2 0 1805 439 2 0 2246 255 69 1 0 325 1550 370 1 0 1921 0.0986198 0.109231 0.0968246 0 1.13355 0.848921 1.5136 6.07843 0.378979 97.4918 1.14384 0.874361 1.49638 0.142479 NA 0.219368 0.147509 NA
+. . 11 5227013 A G 2 1 1 42 551 1653 0 42 551 1653 0 2246 6 74 245 0 325 36 477 1408 0 1921 0.141362 0.132308 0.142894 0 0.930818 0.379086 2.28556 1.04403 0.435278 2.50417 1.09336 0.856439 1.39581 0.359393 NA 0.11485 0.126545 NA
+# Completed successfully at 2026-08-10 18:08:22

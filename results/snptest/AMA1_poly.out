@@ -1,0 +1,15 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:21"
+#  started: 2026-08-10 18:08:21
+# 
+# Analysis properties:
+#   -data cameroon_hbb_genotypes_1701_infected_samples.vcf.gz cameroon_1701_infected_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/AMA1_poly.out (user-supplied)
+#   -pheno AMA1_poly (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total cases_AA cases_AB cases_BB cases_NULL cases_total controls_AA controls_AB controls_BB controls_NULL controls_total all_maf cases_maf controls_maf missing_data_proportion het_OR het_OR_lower het_OR_upper hom_OR hom_OR_lower hom_OR_upper all_OR all_OR_lower all_OR_upper frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1252 297 2 0 1252 297 2 0 1551 890 194 1 0 1085 362 103 1 0 466 0.0970342 0.0903226 0.112661 0 0.766096 0.58577 1.00193 0.406742 0.0253715 6.52064 0.782033 0.60871 1.00471 0.0453562 NA -0.272357 0.134892 NA
+. . 11 5227013 A G 2 1 1 29 380 1142 0 29 380 1142 0 1551 17 284 784 0 1085 12 96 358 0 466 0.141199 0.146544 0.128755 0 2.08824 0.962661 4.52987 1.54584 0.730574 3.27089 0.860675 0.686845 1.0785 0.186548 NA -0.151632 0.115734 NA
+# Completed successfully at 2026-08-10 18:08:21

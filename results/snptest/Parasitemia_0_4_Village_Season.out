@@ -1,0 +1,16 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:21"
+#  started: 2026-08-10 18:08:21
+# 
+# Analysis properties:
+#   -cov_names Village Season (user-supplied)
+#   -data cameroon_hbb_genotypes_1701_infected_samples.vcf.gz cameroon_1701_infected_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/Parasitemia_0_4_Village_Season.out (user-supplied)
+#   -pheno Parasitemia_0_4 (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total all_maf missing_data_proportion frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1379 320 2 0 1379 320 2 0 1701 0.0952381 0 0.0885812 NA -0.101258 0.0594265 NA
+. . 11 5227013 A G 2 1 1 31 417 1253 0 31 417 1253 0 1701 0.1408 0 0.449303 NA -0.036405 0.0481068 NA
+# Completed successfully at 2026-08-10 18:08:21

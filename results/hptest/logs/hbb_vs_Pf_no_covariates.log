@@ -1,0 +1,49 @@
+
+Welcome to hptest
+(version: 2.2.0, revision: unknown)
+
+(C) 2009-2020 University of Oxford
+
+Loaded data for 1701 samples.
+  Predictor data:
+                     (not computed)  "cameroon_hbb_genotypes_1701_infected_samples.vcf.gz"
+                     (total 1 sources, number of snps not computed).
+  Number of samples: 1701
+
+    Outcome data:
+                     (not computed)  "cameroon_Pf_genotypes_1701_infected_samples.vcf.gz"
+                     (total 1 sources, number of snps not computed).
+  Number of samples: 1701
+
+Models are:
+- Model 1 ("null"): BinomialLogistic( 1701 of 1701 samples ): (outcome=1) ~ baseline/outcome=1
+- Model 2 ("gen"): BinomialLogistic( 1701 of 1701 samples ): (outcome=1) ~ baseline/outcome=1 + add/outcome=1 + overdominance/outcome=1
+  with priors:
+            add/outcome=1 ~ logF( 2, 2 ).
+  overdominance/outcome=1 ~ logF( 4, 4 ).
+
+Model design for first test:
+           outcome   baseline     add overdominance
+      0      1   0          1       0             0
+      1      0   1          1       1             1
+      2      0   0          1       0             0
+      3      1   0          1       0             0
+      4      1   0          1       0             0
+      5      0   0          1       0             0
+      6      0   0          1       1             1
+      7      1   0          1       0             0
+      8      1   0 ~        1       0             0
+               .         .       .             .
+               .         .       .             .
+               .         .       .             .
+   1695      1   0          1       0             0
+   1696      0   0          1       1             1
+   1697      0   1          1       0             0
+   1698      1   0          1       0             0
+   1699      0   0          1       0             0
+   1700      1   0          1       0             0
+.
+
+Testing                                                     :  (11/?,1.0s,10.7/s)Testing                                                     :  (100/?,-1.8s)
+
+Thank you for using hptest.

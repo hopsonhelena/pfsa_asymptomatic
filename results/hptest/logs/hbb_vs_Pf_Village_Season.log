@@ -1,0 +1,84 @@
+
+Welcome to hptest
+(version: 2.2.0, revision: unknown)
+
+(C) 2009-2020 University of Oxford
+
+Loaded data for 1701 samples.
+  Predictor data:
+                     (not computed)  "cameroon_hbb_genotypes_1701_infected_samples.vcf.gz"
+                     (total 1 sources, number of snps not computed).
+  Number of samples: 1701
+
+    Outcome data:
+                     (not computed)  "cameroon_Pf_genotypes_1701_infected_samples.vcf.gz"
+                     (total 1 sources, number of snps not computed).
+  Number of samples: 1701
+
+Adding covariates...
+++ Added covariate: "Village":
+     missing  levels
+     0        abembe(29) adoum(41) ekaliII(91) ekokoII(451) koumouI(349) mekomba(145) metet(96) mfida(55) ndangueng(89) nkassomo(134)... (+ 1 other levels)
+
+++ Added covariate: "Season":
+     missing  levels
+     0        S1(892) S2(370) S3(439)
+
+Models are:
+- Model 1 ("null"): BinomialLogistic( 1701 of 1701 samples ): (outcome=1) ~ baseline/outcome=1 + Village=adoum/outcome=1 + Village=ekaliII/outcome=1 + Village=ekokoII/outcome=1 + Village=koumouI/outcome=1 + Village=mekomba/outcome=1 + Village=metet/outcome=1 + Village=mfida/outcome=1 + Village=ndangueng/outcome=1 + Village=nkassomo/outcome=1 + Village=nsimalen/outcome=1 + Season=S2/outcome=1 + Season=S3/outcome=1
+  with priors:
+      Village=adoum/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=ekaliII/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=ekokoII/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=koumouI/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=mekomba/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+      Village=metet/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+      Village=mfida/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+  Village=ndangueng/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+   Village=nkassomo/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+   Village=nsimalen/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+          Season=S2/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+          Season=S3/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+
+- Model 2 ("gen"): BinomialLogistic( 1701 of 1701 samples ): (outcome=1) ~ baseline/outcome=1 + add/outcome=1 + overdominance/outcome=1 + Village=adoum/outcome=1 + Village=ekaliII/outcome=1 + Village=ekokoII/outcome=1 + Village=koumouI/outcome=1 + Village=mekomba/outcome=1 + Village=metet/outcome=1 + Village=mfida/outcome=1 + Village=ndangueng/outcome=1 + Village=nkassomo/outcome=1 + Village=nsimalen/outcome=1 + Season=S2/outcome=1 + Season=S3/outcome=1
+  with priors:
+                add/outcome=1 ~ logF( 2, 2 ).
+      overdominance/outcome=1 ~ logF( 4, 4 ).
+      Village=adoum/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=ekaliII/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=ekokoII/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=koumouI/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+    Village=mekomba/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+      Village=metet/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+      Village=mfida/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+  Village=ndangueng/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+   Village=nkassomo/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+   Village=nsimalen/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+          Season=S2/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+          Season=S3/outcome=1 ~ logF( 0.0770407, 0.0770407 ).
+
+Model design for first test:
+           outcome   baseline     add overdominance Village=adoum Village=ekaliII Village=ekokoII Village=koumouI Village=mekomba Village=metet Village=mfida Village=ndangueng Village=nkassomo Village=nsimalen Season=S2 Season=S3
+      0      1   0          1       0             0             0               0               0               0               0             0             0                 0                1                0         0         1
+      1      0   1          1       1             1             0               0               1               0               0             0             0                 0                0                0         0         0
+      2      0   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+      3      1   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+      4      1   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+      5      0   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+      6      0   0          1       1             1             0               0               1               0               0             0             0                 0                0                0         0         0
+      7      1   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+      8      1   0 ~        1       0             0             0               0               0               0               0             0             0                 0                1                0         0         1
+               .         .       .             .             .               .               .               .               .             .             .                 .                .                .         .         .
+               .         .       .             .             .               .               .               .               .             .             .                 .                .                .         .         .
+               .         .       .             .             .               .               .               .               .             .             .                 .                .                .         .         .
+   1695      1   0          1       0             0             0               0               0               0               0             0             1                 0                0                0         0         0
+   1696      0   0          1       1             1             0               0               0               0               0             0             1                 0                0                0         0         0
+   1697      0   1          1       0             0             0               0               0               0               0             0             0                 0                0                1         0         0
+   1698      1   0          1       0             0             0               0               1               0               0             0             0                 0                0                0         0         0
+   1699      0   0          1       0             0             0               1               0               0               0             0             0                 0                0                0         0         0
+   1700      1   0          1       0             0             0               0               0               1               0             0             0                 0                0                0         0         0
+.
+
+Testing                                                     :  (5/?,1.0s,4.8/s)Testing                                                     :  (11/?,2.2s,5.1/s)Testing                                                     :  (18/?,3.2s,5.6/s)Testing                                                     :  (24/?,4.3s,5.5/s)Testing                                                     :  (77/?,5.4s,14.3/s)Testing                                                     :  (100/?,0.4s,232.3/s)
+
+Thank you for using hptest.

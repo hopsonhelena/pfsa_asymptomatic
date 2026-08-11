@@ -1,0 +1,16 @@
+# Analysis: "SNPTEST analysis, started 2026-08-10 18:08:20"
+#  started: 2026-08-10 18:08:20
+# 
+# Analysis properties:
+#   -cov_names Village Season (user-supplied)
+#   -data cameroon_hbb_genotypes_1701_infected_samples.vcf.gz cameroon_1701_infected_samples.sample (user-supplied)
+#   -frequentist 1 (user-supplied)
+#   -genotype_field GT (user-supplied)
+#   -method threshold (user-supplied)
+#   -o results/snptest/AMA1_coi_Village_Season.out (user-supplied)
+#   -pheno AMA1_coi (user-supplied)
+# 
+alternate_ids rsid chromosome position alleleA alleleB index average_maximum_posterior_call info cohort_1_AA cohort_1_AB cohort_1_BB cohort_1_NULL all_AA all_AB all_BB all_NULL all_total all_maf missing_data_proportion frequentist_add_pvalue frequentist_add_info frequentist_add_beta_1 frequentist_add_se_1 comment
+. . 11 5227002 T A 1 1 1 1252 297 2 0 1252 297 2 0 1551 0.0970342 0 0.0736997 NA -0.11428 0.0638546 NA
+. . 11 5227013 A G 2 1 1 29 380 1142 0 29 380 1142 0 1551 0.141199 0 0.353949 NA -0.048226 0.0520104 NA
+# Completed successfully at 2026-08-10 18:08:20
