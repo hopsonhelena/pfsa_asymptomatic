@@ -10,6 +10,9 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname -- "$(dirname -- "$SCRIPT_DIR")")"
+cd "$REPO_ROOT"
 
 ### CONFIG 
 SNPTEST_BIN="snptest_v2.5.2"
@@ -26,12 +29,14 @@ mkdir -p "$OUTDIR"/logs
 run_snptest () {
     pheno="$1"
     shift
-    covariates="$@"
- 
-    if [ -n "$covariates" ]; then
-        tag="${pheno}_$(echo $covariates | tr ' ' '_')"
+    local covariates=("$@")
+
+    if (( ${#covariates[@]} )); then
+        local covariate_tag
+        covariate_tag="$(IFS=_; echo "${covariates[*]}")"
+        tag="${pheno}_${covariate_tag}"
         "$SNPTEST_BIN" -data "$VCF" "$SAMPLES" -genotype_field GT -pheno "$pheno" \
-            -frequentist 1 -method threshold -cov_names $covariates \
+            -frequentist 1 -method threshold -cov_names "${covariates[@]}" \
             -o "$OUTDIR/$tag.out" > "$OUTDIR/logs/$tag.log" 2>&1
     else
         tag="$pheno"
@@ -45,18 +50,14 @@ run_snptest () {
 ## ANALYSES RUN
 # Infection status from sequencing (binary), no covariates
 run_snptest Infected
-run_snptest Infected
 
 # Infection status from sequencing (binary), adjusted for village + season
-run_snptest Infected Village Season
 run_snptest Infected Village Season
 
 # Infection status from microscopy (binary), no covariates
 run_snptest Infected_microscopy
-run_snptest Infected_microscopy
 
 # Infection status from microscopy (binary), adjusted for village + season
-run_snptest Infected_microscopy Village Season
 run_snptest Infected_microscopy Village Season
  
 # Gametocyte presence from microscopy (binary), no covariates 

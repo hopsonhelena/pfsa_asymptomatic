@@ -10,10 +10,14 @@
  
 set -euo pipefail
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname -- "$(dirname -- "$SCRIPT_DIR")")"
+cd "$REPO_ROOT"
+
 ## CONFIG
 SNPTEST_BIN="snptest_v2.5.2"
-SAMPLES='cameroon_1701_infected_samples.sample'
-VCF='cameroon_hbb_genotypes_1701_infected_samples.vcf.gz'
+SAMPLES='data/cameroon_1701_infected_samples.sample'
+VCF='data/cameroon_hbb_genotypes_1701_infected_samples.vcf.gz'
 OUTDIR="results/snptest"
 
 mkdir -p "$OUTDIR"/logs
@@ -24,12 +28,14 @@ mkdir -p "$OUTDIR"/logs
 run_snptest () {
     pheno="$1"
     shift
-    covariates="$@"
- 
-    if [ -n "$covariates" ]; then
-        tag="${pheno}_$(echo $covariates | tr ' ' '_')"
+    local covariates=("$@")
+
+    if (( ${#covariates[@]} )); then
+        local covariate_tag
+        covariate_tag="$(IFS=_; echo "${covariates[*]}")"
+        tag="${pheno}_${covariate_tag}"
         "$SNPTEST_BIN" -data "$VCF" "$SAMPLES" -genotype_field GT -pheno "$pheno" \
-            -frequentist 1 -method threshold -cov_names $covariates \
+            -frequentist 1 -method threshold -cov_names "${covariates[@]}" \
             -o "$OUTDIR/$tag.out" > "$OUTDIR/logs/$tag.log" 2>&1
     else
         tag="$pheno"

@@ -8,7 +8,11 @@
 # Requirements: hptest v2.2.0 which is included as part of the qctool package (download here: https://enkre.net/code/)
  
 set -euo pipefail
- 
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(dirname -- "$(dirname -- "$SCRIPT_DIR")")"
+cd "$REPO_ROOT"
+
 ## CONFIG
 HPTEST_BIN="hptest_v2.2.0"
 SAMPLES="data/hptest_samples.txt"
@@ -21,13 +25,15 @@ mkdir -p "$OUTDIR"/logs
 # Runs one hptest association test. Any covariates given are passed
 # straight to -covariates; omit them for the unadjusted run.
 run_hptest () {
-    covariates="$@"
- 
-    if [ -n "$covariates" ]; then
-        tag="hbb_vs_Pf_$(echo $covariates | tr ' ' '_')"
+    local covariates=("$@")
+
+    if (( ${#covariates[@]} )); then
+        local covariate_tag
+        covariate_tag="$(IFS=_; echo "${covariates[*]}")"
+        tag="hbb_vs_Pf_${covariate_tag}"
         "$HPTEST_BIN" -outcome "$PF" -predictor "$HBB" -s "$SAMPLES" \
             -treat-outcome-as-haploid -output-parameters all -output-counts \
-            -covariates $covariates \
+            -covariates "${covariates[@]}" \
             -o "$OUTDIR/$tag.hptest.csv" > "$OUTDIR/logs/$tag.log" 2>&1
     else
         tag="hbb_vs_Pf_no_covariates"

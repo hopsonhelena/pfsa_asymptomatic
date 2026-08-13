@@ -1,127 +1,13 @@
-# Create and plot data for main Figure 1.
+# Plot main Figure 1 from its analysis tables.
 
 library(ggplot2)
 library(dplyr)
+library(patchwork)
 
+fig1a <- read.delim("results/figures/data/Figure1A_rates.tsv")
+fig1b <- read.delim("results/figures/data/Figure1B_polyclonality.tsv")
+fig1c <- read.delim("results/figures/data/Figure1C_parasitemia.tsv")
 
-# ---- Create table for Figure 1 ----
-
-metadata <- read.table(
-  "inputs/metadata.tsv", check.names = FALSE, header = TRUE, sep = "\t"
-)
-metadata_aa_as <- metadata[
-  metadata$HbS_gt %in% c("AA", "AS"), , drop = FALSE
-]
-
-count_rate_rows <- function(data, group_column, outcome_column) {
-  groups <- split(data, data[[group_column]], drop = TRUE)
-  output <- lapply(names(groups), function(group) {
-    values <- groups[[group]][[outcome_column]]
-    n <- length(values)
-    successes <- sum(values == 1, na.rm = TRUE)
-    estimate <- successes / n
-    se <- sqrt(estimate * (1 - estimate) / n)
-    data.frame(
-      HbS_genotype = group,
-      N = n,
-      count = successes,
-      count_absent = n - successes,
-      proportion = estimate,
-      CI_95_lower = max(0, estimate - 1.96 * se),
-      CI_95_upper = min(1, estimate + 1.96 * se)
-    )
-  })
-  do.call(rbind, output)
-}
-
-infection <- count_rate_rows(metadata_aa_as, "HbS_gt", "Infected")
-gametocytes <- count_rate_rows(
-  metadata_aa_as[metadata_aa_as$Infected == 1, , drop = FALSE],
-  "HbS_gt", "Gametocytes_YN"
-)
-fig1a <- merge(
-  infection, gametocytes, by = "HbS_genotype",
-  suffixes = c("_infection", "_gametocyte"), sort = FALSE
-)
-fig1a <- fig1a[match(c("AA", "AS"), fig1a$HbS_genotype), ]
-fig1a <- data.frame(
-  HbS_genotype = fig1a$HbS_genotype,
-  N = fig1a$N_infection,
-  N_infected = fig1a$count_infection,
-  proportion_infected = fig1a$proportion_infection,
-  CI_95_lower = fig1a$CI_95_lower_infection,
-  CI_95_upper = fig1a$CI_95_upper_infection,
-  N_infected_gametocytes = fig1a$count_gametocyte,
-  proportion_infected_gametocytes = fig1a$proportion_gametocyte,
-  check.names = FALSE
-)
-
-get_polyclonal <- function(amplicon, coi_column, outcome_column) {
-  evaluable <- metadata[
-    metadata$HbS_gt %in% c("AA", "AS") &
-      !is.na(metadata[[coi_column]]),
-    ,
-    drop = FALSE
-  ]
-  result <- count_rate_rows(evaluable, "HbS_gt", outcome_column)
-  names(result)[names(result) == "count"] <- "polyclonal_count"
-  names(result)[names(result) == "count_absent"] <- "monoclonal_count"
-  names(result)[names(result) == "proportion"] <- "polyclonal_proportion"
-  result$Amplicon <- amplicon
-  result[, c(
-    "Amplicon", "HbS_genotype", "N", "polyclonal_count",
-    "monoclonal_count", "polyclonal_proportion",
-    "CI_95_lower", "CI_95_upper"
-  )]
-}
-fig1b <- rbind(
-  get_polyclonal("AMA1", "COI_ama1", "monopolyCOI_ama1"),
-  get_polyclonal("SERA2", "COI_sera2", "monopolyCOI_sera2")
-)
-
-metadata$Parasitemia_plot <- ifelse(
-  metadata$Parasitemia %in% c("Pf+++++", "Pf++++++"),
-  "Pf++++", metadata$Parasitemia
-)
-fig1c_metadata <- metadata[
-  metadata$HbS_gt %in% c("AA", "AS"), , drop = FALSE
-]
-fig1c <- as.data.frame(
-  table(
-    HbS_genotype = factor(fig1c_metadata$HbS_gt, c("AA", "AS")),
-    Parasitemia_category = factor(
-      fig1c_metadata$Parasitemia_plot,
-      c("0", "Pf+", "Pf++", "Pf+++", "Pf++++")
-    )
-  ),
-  responseName = "count"
-)
-fig1c <- fig1c[fig1c$count > 0, , drop = FALSE]
-fig1c <- fig1c %>%
-  group_by(HbS_genotype) %>%
-  mutate(
-    total_within_HbS = sum(count),
-    proportion = count / total_within_HbS
-  ) %>%
-  ungroup() %>%
-  as.data.frame()
-
-write.table(
-  fig1a, "figure_data/Figure1A_rates.tsv",
-  sep = "\t", row.names = FALSE, quote = FALSE
-)
-write.table(
-  fig1b, "figure_data/Figure1B_polyclonality.tsv",
-  sep = "\t", row.names = FALSE, quote = FALSE
-)
-write.table(
-  fig1c, "figure_data/Figure1C_parasitemia.tsv",
-  sep = "\t", row.names = FALSE, quote = FALSE
-)
-
-# ---- Plot figure ----
-
-dir.create("figures", recursive = TRUE, showWarnings = FALSE)
 theme_set(theme_minimal(base_size = 7))
 
 fig1a$HbS_genotype <- factor(fig1a$HbS_genotype, c("AA", "AS"))
@@ -251,9 +137,9 @@ cplot <- ggplot(
     )
   ) +
   scale_y_continuous(
-    limits = c(0, 1),
     expand = expansion(mult = c(0, 0.02))
   ) +
+  coord_cartesian(ylim = c(0, 1)) +
   labs(x = NULL, y = "Proportion", fill = "Parasitemia") +
   theme_minimal(base_size = 7) +
   theme(
@@ -273,18 +159,29 @@ cplot <- ggplot(
   ) +
   guides(fill = guide_legend(override.aes = list(size = 3)))
 
+figure1 <- (aplot + bplot + cplot) +
+  plot_layout(axis_titles = "collect", widths = c(1, 1.3, 1)) +
+  plot_annotation(tag_levels = "a") &
+  theme(plot.tag = element_text(face = "bold", size = 7))
+
+dir.create("results/figures/plots", recursive = TRUE, showWarnings = FALSE)
 ggsave(
-  file.path("figures", "Figure1A.pdf"),
+  file.path("results/figures/plots", "Figure1.pdf"),
+  plot = figure1, device = "pdf",
+  width = 178, height = 65, units = "mm", bg = "white"
+)
+ggsave(
+  file.path("results/figures/plots", "Figure1A.pdf"),
   plot = aplot, device = "pdf",
   width = 60, height = 55, units = "mm", bg = "white"
 )
 ggsave(
-  file.path("figures", "Figure1B.pdf"),
+  file.path("results/figures/plots", "Figure1B.pdf"),
   plot = bplot, device = "pdf",
-  width = 60, height = 50, units = "mm", bg = "white"
+  width = 60, height = 55, units = "mm", bg = "white"
 )
 ggsave(
-  file.path("figures", "Figure1C.pdf"),
+  file.path("results/figures/plots", "Figure1C.pdf"),
   plot = cplot, device = "pdf",
   width = 60, height = 55, units = "mm", bg = "white"
 )

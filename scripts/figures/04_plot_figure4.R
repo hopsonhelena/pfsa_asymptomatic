@@ -1,88 +1,11 @@
-# Create and plot data for main Figure 4.
+# Plot main Figure 4 from its analysis tables.
 
 library(cowplot)
 library(ggplot2)
 
+fig4a <- read.delim("results/figures/data/Figure4A_observed_expected.tsv")
+fig4b <- read.delim("results/figures/data/Figure4B_paired_VAF.tsv")
 
-# ---- Create table for Figure 4 ----
-
-metadata <- read.table("inputs/metadata.tsv", check.names = FALSE, header = TRUE, sep = "\t")
-pfsa1_column <- "Pf3D7_02_v3.631190_gt"
-pfsa3_column <- "Pf3D7_11_v3.1058035_gt"
-
-unmixed <- metadata[
-  metadata$Infected == 1 &
-    metadata[[pfsa1_column]] %in% c("0/0", "1/1") &
-    metadata[[pfsa3_column]] %in% c("0/0", "1/1"),
-  ,
-  drop = FALSE
-]
-pfsa1_alt_frequency <- mean(unmixed[[pfsa1_column]] == "1/1")
-pfsa3_alt_frequency <- mean(unmixed[[pfsa3_column]] == "1/1")
-expected_probability <- c(
-  (1 - pfsa1_alt_frequency) * (1 - pfsa3_alt_frequency),
-  (1 - pfsa1_alt_frequency) * pfsa3_alt_frequency,
-  pfsa1_alt_frequency * (1 - pfsa3_alt_frequency),
-  pfsa1_alt_frequency * pfsa3_alt_frequency
-)
-combinations <- data.frame(
-  Pfsa1_genotype = c("0/0", "0/0", "1/1", "1/1"),
-  Pfsa3_genotype = c("0/0", "1/1", "0/0", "1/1")
-)
-get_joint_counts <- function(data, group) {
-  observed <- vapply(seq_len(nrow(combinations)), function(i) {
-    sum(
-      data[[pfsa1_column]] == combinations$Pfsa1_genotype[i] &
-        data[[pfsa3_column]] == combinations$Pfsa3_genotype[i]
-    )
-  }, numeric(1))
-  data.frame(
-    Group = group,
-    N = nrow(data),
-    combinations,
-    Observed_count = observed,
-    Expected_count = nrow(data) * expected_probability,
-    Observed_proportion = observed / nrow(data),
-    Expected_proportion = expected_probability,
-    Pfsa1_alt_frequency_for_null = pfsa1_alt_frequency,
-    Pfsa3_alt_frequency_for_null = pfsa3_alt_frequency
-  )
-}
-fig4a <- rbind(
-  get_joint_counts(unmixed, "All"),
-  get_joint_counts(unmixed[unmixed$HbS_gt == "AA", ], "AA"),
-  get_joint_counts(unmixed[unmixed$HbS_gt == "AS", ], "AS")
-)
-
-mixed_either <- metadata[
-  metadata$Infected == 1 &
-    (
-      metadata[[pfsa1_column]] == "0/1" |
-        metadata[[pfsa3_column]] == "0/1"
-    ) &
-    metadata$HbS_gt %in% c("AA", "AS") &
-    complete.cases(metadata[, c("pfsa1_vaf", "pfsa3_vaf")]),
-  ,
-  drop = FALSE
-]
-fig4b <- mixed_either[, c(
-  "Seq.Sample.ID", "Sample.ID", "HbS_gt", "pfsa1_vaf", "pfsa3_vaf"
-)]
-names(fig4b) <- c(
-  "Sequencing_sample_ID", "Study_sample_ID", "HbS_genotype",
-  "Pfsa1_VAF", "Pfsa3_VAF"
-)
-
-write.table(
-  fig4a, "figure_data/Figure4A_observed_expected.tsv", sep = "\t", row.names = FALSE, quote = FALSE
-)
-write.table(
-  fig4b, "figure_data/Figure4B_paired_VAF.tsv", sep = "\t", row.names = FALSE, quote = FALSE
-)
-
-# ---- Plot figure ----
-
-dir.create("figures", recursive = TRUE, showWarnings = FALSE)
 theme_set(theme_minimal(base_size = 7))
 
 make_ld_plot <- function(results, title) {
@@ -174,13 +97,33 @@ vaf_row <- plot_grid(
   axis = "tb"
 )
 
+figure4_body <- plot_grid(
+  ld_row, vaf_row,
+  ncol = 1,
+  rel_heights = c(0.8, 0.5)
+)
+figure4 <- ggdraw(figure4_body) +
+  draw_plot_label(
+    label = c("a", "b"),
+    x = c(0.01, 0.01),
+    y = c(0.99, 0.45),
+    fontface = "bold",
+    size = 7
+  )
+
+dir.create("results/figures/plots", recursive = TRUE, showWarnings = FALSE)
 ggsave(
-  file.path("figures", "Figure4A.pdf"),
-  plot = ld_row, device = "pdf",
-  width = 190, height = 105, units = "mm", bg = "white"
+  file.path("results/figures/plots", "Figure4.pdf"),
+  plot = figure4, device = "pdf",
+  width = 180, height = 168.6, units = "mm", bg = "white"
 )
 ggsave(
-  file.path("figures", "Figure4B.pdf"),
+  file.path("results/figures/plots", "Figure4A.pdf"),
+  plot = ld_row, device = "pdf",
+  width = 180, height = 99.5, units = "mm", bg = "white"
+)
+ggsave(
+  file.path("results/figures/plots", "Figure4B.pdf"),
   plot = vaf_row, device = "pdf",
   width = 150, height = 75, units = "mm", bg = "white"
 )
