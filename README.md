@@ -1,4 +1,4 @@
-# Pfsa and sickle hemoglobin in asymptomatic *P falciparum* infection
+# Pfsa and sickle hemoglobin in asymptomatic *P. falciparum* infection
 
 Code and data supporting the figures and association analyses in:
 
