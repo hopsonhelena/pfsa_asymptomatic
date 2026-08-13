@@ -11,7 +11,7 @@ infection.” *bioRxiv* (2025). [doi:10.1101/2025.09.09.675015](https://doi.org/
 data/          analysis inputs: metadata, genotypes, and sample files
 scripts/
   figures/       paired analysis and plotting scripts for Figures 1-4
-  *.R            reusable R analysis functions
+  *.R            analysis functions
   association/   HPTEST and SNPTEST association scripts
 results/       generated figures and association outputs
   figures/data/   generated tab-separated source-data tables
@@ -26,8 +26,8 @@ Figures were tested with R 4.4.1 and require `ggplot2`, `dplyr`, `patchwork`,
 
 The association analyses require:
 
-- HPTEST 2.2.0, distributed with [QCTOOL](https://www.well.ox.ac.uk/~gav/qctool_v2/)
-- SNPTEST 2.5.2
+- HPTEST 2.2.0, included in [QCTOOL](https://www.well.ox.ac.uk/~gav/qctool_v2/)
+- SNPTEST 2.5.2, 
 
 
 ## Reproduce the figures
@@ -55,5 +55,4 @@ Pfsa1/Pfsa3 linkage disequilibrium statistics.
 - The VCF, `.sample`, and text files in `data/` are inputs to the HPTEST and
   SNPTEST scripts.
 
-Figure 3 reads the Cameroon Pfsa1/Pfsa3 estimates directly from
-`results/hptest/hbb_vs_Pf_no_covariates.hptest.csv`.
+
