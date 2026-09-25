@@ -1,68 +1,33 @@
 # Amplicon sequencing pipeline
 
-Processes multiplexed amplicon sequencing data across human and
-*Plasmodium falciparum* (Pf) loci from 2,200 samples from Cameroon for
+Pipeline for processing multiplexed amplicon sequencing data targeting human and
+*Plasmodium falciparum* (Pf) loci, applied to 2,246 samples from Cameroon in
 [Hopson et al. (2025)](https://doi.org/10.1101/2025.09.09.675015).
 
 **Workflow**
 
-1. **Process, align, and count** (scripts 01-06): process and align reads to
-   a joint human + Pf reference and calculate coverage depth.
-2. **QC and infection calling** (scripts 07-10): flag contaminated plates,
-   filter, and call infection status using coverage depth.
-3. **Variant calling** (scripts 11-14): perform joint variant calling of human and Pf variants.
+1. **Process, align, and count** (scripts 01-06): FASTQ files to coverage depth summaries.
+2. **QC and infection calling** (scripts 07-10): use coverage depth to flag plates, filter samples, and call infections.
+3. **Variant calling** (scripts 11-14): perform joint variant calling across human and Pf amplicons.
 
+## Setup
 
-## Structure
-
-```
-config.sh                     pipeline settings
-environment.yml
-submit_alignment.sh           submits scripts 01–06 (trimming, alignment, coverage depth) to Slurm with job dependencies
-submit_variant_calling.sh     submits scripts 11–14 (variant calling) to Slurm with job dependencies; run after scripts 07–10
-pipeline/                     numbered scripts, one per step
-data/
-  bed/                        human_pf_amplicons.bed (all amplicons) and one <amplicon>.bed per amplicon
-  sample_metadata.csv         sample metadata (see Inputs)
-  runs/                       FASTQ files, one folder per sequencing run (see Inputs)
-output/
-  runs/                        trimmed reads, FastQC, BAMs, pileups, one folder per run 
-  all_runs_mean_coverage.txt   coverage depth per amplicon/sample 
-  multiqc/                     MultiQC report 
-  plateQC/                     control ratios, plots, plate pass/fail 
-  infection_calling/           filtered samples, parameter tables, infection calls 
-  all_bams.txt, infected_bams.txt   BAM lists for variant calling 
-  human/                       filtered VCFs and genotype tables
-  parasite/                    filtered VCFs and genotype tables                        
-logs/                          stdout/stderr, one file per job 
-```
-
-
-## Requirements
+### Requirements
 
 - Slurm, conda (conda must be on your PATH)
-- Tools (cutadapt, FastQC, MultiQC, bwa, samtools, bcftools) and Python packages (pandas, matplotlib, scipy) - specified in `environment.yml`
+- Tools (cutadapt, FastQC, MultiQC, bwa, samtools, bcftools) and Python packages (pandas, matplotlib, scipy), all specified in `environment.yml`
 
-## Before running
+### Reference genome
 
-All pipeline steps share the settings in `config.sh`. Edit these parameters: 
-
-  - `REF` - Path to a concatenated human and *P. falciparum* 3D7 reference genome 
-  - `ALL_RUNS` - Names of the run folders inside `data/runs/`, e.g. 24118R
-  - `SLURM_ACCOUNT`, `SLURM_PARTITION` - cluster account/partition 
-  - `DATA_DIR` - FASTQ files, in subfolders by sequencing run (default `data/runs/`)
-
-## Reference genome 
-
-The combined reference specified by `REF` contains:
+The pipeline aligns to a single FASTA containing both genomes:
 
 - Human: [GRCh38 primary assembly, Ensembl release 108](https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz)
-- Parasite: [*Plasmodium falciparum* 3D7, PlasmoDB release 62](https://plasmodb.org/a/service/raw-files/release-62/Pfalciparum3D7/fasta/data/PlasmoDB-62_Pfalciparum3D7_Genome.fasta)
+- Parasite: [Plasmodium falciparum 3D7, PlasmoDB release 62](https://plasmodb.org/a/service/raw-files/release-62/Pfalciparum3D7/fasta/data/PlasmoDB-62_Pfalciparum3D7_Genome.fasta)
 
-Concatenate the human and parasite FASTA files before running the pipeline. Contig names must match
-those in `data/bed/`.
+Concatenate the two FASTA files before running the pipeline, and set `REF` in
+`config.sh` to the result. Contig names must match those in `data/bed/`.
 
-## Inputs
+### Inputs
 
 Illumina MiSeq paired-end FASTQ files, one folder per sequencing run (one 384-sample plate in this study), named `<run>R`, with FASTQ files named `<run>X<number>`:
 
@@ -70,28 +35,41 @@ Illumina MiSeq paired-end FASTQ files, one folder per sequencing run (one 384-sa
 data/runs/24118R/Fastq/24118X100_..._R{1,2}_001.fastq.gz
 ```
 
-Copy `data/sample_metadata_template.csv` to `data/sample_metadata.csv`, then
-add one row per sample. Its columns are:
+Reads for this study are deposited in the NCBI SRA under BioProject
+[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1503656).
+
+Copy `data/sample_metadata_template.csv` to `data/sample_metadata.csv` and add one row per sample.
+Columns:
+
 - `seq_sample_id` - FASTQ file name up to the first `_` (e.g. 24118X100)
 - `plateID` - sequencing run (e.g. 24118)
 - `sample_type` - `sample` or `control`
 - `control_type` - `negative` or `positive`
-- `Parasitemia` - microscopy category (e.g. 0, Pf+); if unavailable, skip `09_select_infection_parameters.py`
+- `Parasitemia` -  microscopy category (e.g. 0, Pf+); optional, only used in`09_select_infection_parameters.py`
+
+### Configuration
+
+Edit `config.sh`:
+
+- `REF` - path to the concatenated reference (see above)
+- `ALL_RUNS` - names of the run folders inside `data/runs/`, e.g. 24118R
+- `SLURM_ACCOUNT`, `SLURM_PARTITION` - cluster account and partition
+- `DATA_DIR` - FASTQ files, in subfolders by sequencing run (default `data/runs/`)
 
 ## Quick start
 
-Run from the repository root after editing `config.sh`:
+Run from `amplicon_pipeline/` after editing `config.sh`.
 
 ### 1. Set up the environment
 
 ```bash
-cd amplicon_pipeline
 conda env create -f environment.yml
 conda activate amplicon-pipeline
 source ./config.sh
 ```
 
-Create the BWA and samtools indexes
+Create the BWA and samtools indexes:
+
 ```bash
 bwa index "$REF"
 samtools faidx "$REF"
@@ -103,20 +81,21 @@ samtools faidx "$REF"
 bash submit_alignment.sh
 ```
 
-Wait for Slurm step 06 to finish and create `output/all_runs_mean_coverage.txt`
+Wait for this step to finish and create `output/all_runs_mean_coverage.txt`.
 
 ### 3. Perform plate QC
+
 Summarize and plot coverage depth across controls:
 
 ```bash
 python pipeline/07_plateQC.py
 ```
 
-Select a cutoff based on plots and tables, then filter the samples:
+Select a cutoff based on plots, then filter samples:
 
 ```bash
-python pipeline/07_plateQC.py --cutoff 0.02 
-python pipeline/08_filter_samples.py  
+python pipeline/07_plateQC.py --cutoff 0.02
+python pipeline/08_filter_samples.py
 ```
 
 ### 4. Select parameters for infection calling
@@ -124,7 +103,9 @@ python pipeline/08_filter_samples.py
 ```bash
 python pipeline/09_select_infection_parameters.py
 ```
-Inspect the outputs and select the amplicons, minimum coverage depth, and percentage of passing amplicons.
+
+Inspect the outputs and select the amplicons, minimum coverage depth, and
+percentage of passing amplicons to use in the next step.
 
 ### 5. Call infections
 
@@ -134,10 +115,37 @@ python pipeline/10_call_infections.py \
     --percent-amplicons 100
 ```
 
-### 6. Call human and parasite variants 
+### 6. Call human and parasite variants
+
 ```bash
 bash submit_variant_calling.sh
 ```
+
+## Repository layout
+
+```
+config.sh                     pipeline settings
+environment.yml
+submit_alignment.sh           submits scripts 01–06 to Slurm with job dependencies
+submit_variant_calling.sh     submits scripts 11–14 to Slurm; run after scripts 07–10
+pipeline/                     numbered scripts, one per step
+data/
+  bed/                        human_pf_amplicons.bed (all amplicons) and one <amplicon>.bed per amplicon
+  sample_metadata_template.csv   template for sample metadata
+  sample_metadata.csv         sample metadata (see Inputs)
+  runs/                       FASTQ files, one folder per sequencing run (see Inputs)
+output/
+  runs/                        trimmed reads, FastQC, BAMs, pileups, one folder per run
+  all_runs_mean_coverage.txt   coverage depth per amplicon/sample
+  multiqc/                     MultiQC report
+  plateQC/                     control ratios, plots, plate pass/fail
+  infection_calling/           filtered samples, parameter tables, infection calls
+  all_bams.txt, infected_bams.txt   BAM lists for variant calling
+  human/                       filtered VCFs and genotype tables
+  parasite/                    filtered VCFs and genotype tables
+logs/                          stdout/stderr
+```
+
 
 ## Pipeline steps
 
@@ -181,5 +189,5 @@ Run with `bash submit_variant_calling.sh`.
 - `14_format_vcf.sh` - optionally removes febrile samples, recomputes INFO tags,
   and combines the parasite amplicon VCFs.
 
-Final vcfs are written to `output/human/<amplicon>.human.filtered.final.vcf.gz` and
-`output/parasite/pf.all.filtered.final.vcf.gz`. Each vcf has a corresponding `.gts.txt` genotype table.
+Final VCFs are written to `output/human/<amplicon>.human.filtered.final.vcf.gz` and
+`output/parasite/pf.all.filtered.final.vcf.gz`. Each VCF has a corresponding `.gts.txt` genotype table.

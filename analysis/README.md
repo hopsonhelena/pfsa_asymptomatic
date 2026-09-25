@@ -2,19 +2,19 @@
 
 Code and data used for the manuscript figures and association analyses.
 
-## Organization
+## Overview
 
 ```text
 data/                 analysis inputs (see its README)
 scripts/
   figures/            analysis and plotting scripts
-  association/        association test scripts 
+  association/        association test scripts
   *.R                 analysis functions
 results/
   figures/            generated PDFs
   tables/             generated source-data tables
   association/
-    hptest/           genotype x genotype association outputs 
+    hptest/           genotype x genotype association outputs
     snptest/          genotype x phenotype association outputs
 ```
 
@@ -23,8 +23,7 @@ results/
 Figures were created with R 4.4.1 and require `ggplot2`, `dplyr`, `patchwork`,
 `cowplot`, `scales`, and `tidyr`.
 
-The association analyses require [SNPTEST 2.5.2](https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest) and HPTEST 2.2.0, distributed as part of [QCTOOL](https://github.com/gavinband/qctool)
-
+The association analyses require [SNPTEST 2.5.2](https://mathgen.stats.ox.ac.uk/genetics_software/snptest/snptest) and HPTEST 2.2.0, distributed as part of [QCTOOL](https://github.com/gavinband/qctool).
 
 ## Association tests
 
@@ -47,7 +46,7 @@ Rscript scripts/figures/01_analyze_figure1.R
 Rscript scripts/figures/01_plot_figure1.R
 ```
 
-Generated tables are written to `results/tables/` and plot pdfs to
+Generated tables are written to `results/tables/` and plot PDFs to
 `results/figures/`.
 
 Figure 4 also writes `results/tables/Figure4A_LD_r2.tsv`, containing
