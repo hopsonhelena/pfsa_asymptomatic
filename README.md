@@ -26,4 +26,4 @@ The variant calls output from `amplicon_pipeline/` are used in `analysis/`:
 ## Data availability
 
 Sequencing reads are deposited in NCBI SRA under BioProject
-[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1503656).
+[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1503656).

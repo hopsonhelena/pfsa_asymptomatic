@@ -36,7 +36,7 @@ data/runs/24118R/Fastq/24118X100_..._R{1,2}_001.fastq.gz
 ```
 
 Reads for this study are deposited in the NCBI SRA under BioProject
-[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/?term=PRJNA1503656).
+[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1503656).
 
 Copy `data/sample_metadata_template.csv` to `data/sample_metadata.csv` and add one row per sample.
 Columns:
