@@ -1,58 +1,36 @@
-# Pfsa and sickle hemoglobin in asymptomatic *P. falciparum* infection
+# Amplicon sequencing pipeline and host–parasite association analysis
 
-Code and data supporting the figures and analyses in:
+This repository contains the analysis workflow for the amplicon sequencing study described in:
 
 Hopson HD, et al. “Sickle cell status skews malaria parasite genotype at
 infection.” *bioRxiv* (2025). [doi:10.1101/2025.09.09.675015](https://doi.org/10.1101/2025.09.09.675015)
 
-## Repository organization
+It is split into two parts: (1) amplicon sequencing pipeline (2) analysis and main figures:
 
 ```text
-data/          analysis inputs: metadata, genotypes, and sample files
-scripts/
-  figures/       paired analysis and plotting scripts for Figures 1-4
-  *.R            analysis functions
-  association/   HPTEST and SNPTEST association scripts
-results/       generated figures and association outputs
-  figures/data/   generated tab-separated source-data tables
-  figures/plots/  generated PDF figures and panels
+amplicon_pipeline/    FASTQ processing, QC, infection calling, and human and *Plasmodium falciparum* variant calling
+analysis/             Manuscript analyses and figures
 ```
 
+## Run the sequencing pipeline
 
-## Requirements
-
-Figures were tested with R 4.4.1 and require `ggplot2`, `dplyr`, `patchwork`,
-`cowplot`, `scales`, and `tidyr`.
-
-The association analyses require:
-
-- HPTEST 2.2.0, included in [QCTOOL](https://www.well.ox.ac.uk/~gav/qctool_v2/)
-- SNPTEST 2.5.2, 
-
-
-## Reproduce the figures
-
-From the repository root, run each figure's analysis script followed by its
-plotting script. For example, to rebuild Figure 1:
+The pipeline is in `amplicon_pipeline/`. Its configuration,
+dependencies, input format, Slurm commands, and output files are documented in
+[`amplicon_pipeline/README.md`](amplicon_pipeline/README.md). Briefly:
 
 ```bash
-Rscript scripts/figures/01_analyze_figure1.R
-Rscript scripts/figures/01_plot_figure1.R
+cd amplicon_pipeline
+conda env create -f environment.yml
+# Edit config.sh
+source config.sh
+bash submit_alignment.sh
 ```
 
-Repeat with the corresponding `02`, `03`, and `04` script pairs to rebuild the
-other figures. Analysis tables are written to `results/figures/data/`, and PDFs
-are written to `results/figures/plots/`.
+The final pipeline products are variant calls in human and *P. falciparum*
+`amplicon_pipeline/output/human/<amplicon>.human.filtered.final.vcf.gz` and
+`amplicon_pipeline/output/parasite/pf.all.filtered.final.vcf.gz`.
 
-Figure 4 also writes `results/figures/data/Figure4A_LD_r2.tsv`, containing
-Pfsa1/Pfsa3 linkage disequilibrium statistics.
+## Run the analysis
 
-
-## Input data
-
-- `data/metadata.tsv` is a reduced Supplementary Table 9 containing
-  only columns used by the figure scripts.
-- The VCF, `.sample`, and text files in `data/` are inputs to the HPTEST and
-  SNPTEST scripts.
-
-
+Requirements, input data, and figure-reproduction instructions are documented
+in [`analysis/README.md`](analysis/README.md).

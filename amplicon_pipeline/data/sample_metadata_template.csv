@@ -1,0 +1,5 @@
+seq_sample_id,plateID,sample_type,control_type,Parasitemia
+00001X1,00001,sample,NA,0
+00001X2,00001,sample,NA,Pf+
+00001X3,00001,control,negative,0
+00001X4,00001,control,positive,Pf+
