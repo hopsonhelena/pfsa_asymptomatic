@@ -1,8 +1,6 @@
 # Amplicon sequencing pipeline and host–parasite association analysis
 
-Code accompanying:
-
-Hopson HD, et al. “Sickle cell status skews malaria parasite genotype at
+Code accompanying: Hopson HD, et al. “Sickle cell status skews malaria parasite genotype at
 infection.” *bioRxiv* (2025). [doi:10.1101/2025.09.09.675015](https://doi.org/10.1101/2025.09.09.675015)
 
 Amplicon sequencing of 2,246 dried blood spots from asymptomatic children in Mfou, Cameroon, 
