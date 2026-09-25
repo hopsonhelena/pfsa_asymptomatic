@@ -16,7 +16,7 @@ amplicon_pipeline/    FASTQ processing, QC, infection calling, and human and P. 
 analysis/             Manuscript analyses and figures
 ```
 
-See [`amplicon_pipeline/README.md`](amplicon_pipeline/README.md) and [`analysis/README.md`](analysis/README.md).
+See [`amplicon_pipeline/README.md`](amplicon_pipeline/README.md) and [`analysis/README.md`](analysis/README.md)
 
 The variant calls output from `amplicon_pipeline/` are used in `analysis/`: 
 
@@ -26,4 +26,4 @@ The variant calls output from `amplicon_pipeline/` are used in `analysis/`:
 ## Data availability
 
 Sequencing reads are deposited in NCBI SRA under BioProject
-[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1503656).
+[PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1503656)
