@@ -4,8 +4,7 @@ Code accompanying: Hopson HD, et al. “Sickle cell status skews malaria parasit
 infection.” *bioRxiv* (2025). [doi:10.1101/2025.09.09.675015](https://doi.org/10.1101/2025.09.09.675015)
 
 Amplicon sequencing of 2,246 dried blood spots from asymptomatic children in Mfou, Cameroon, 
-genotyped at the human sickle cell locus and at *P. falciparum* loci including sickle-associated
-(Pfsa) alleles.
+targeting human variants associated with malaria (including the sickle cell allele) and *P. falciparum* loci including the sickle-associated (Pfsa) alleles. 
 
 ## Overview
 
