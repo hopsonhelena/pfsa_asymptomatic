@@ -12,7 +12,7 @@ genotyped at the human sickle cell locus and at *P. falciparum* loci including s
 ## Overview
 
 ```text
-amplicon_pipeline/    FASTQ processing, QC, infection calling, and human and P. falciparum variant calling
+amplicon_pipeline/    FASTQ processing, QC, infection calling, variant calling (human and P. falciparum)
 analysis/             Manuscript analyses and figures
 ```
 
