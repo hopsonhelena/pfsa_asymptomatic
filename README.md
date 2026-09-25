@@ -26,7 +26,7 @@ source ./config.sh
 bash submit_alignment.sh
 ```
 
-The pipeline's final outputs are variant calls:
+Final output variant calls: 
 
 - Human: `amplicon_pipeline/output/human/<amplicon>.human.filtered.final.vcf.gz`
 - *P. falciparum*: `amplicon_pipeline/output/parasite/pf.all.filtered.final.vcf.gz`
