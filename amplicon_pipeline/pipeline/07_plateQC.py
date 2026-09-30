@@ -1,24 +1,35 @@
 """
-Assess plate contamination using negative and positive control coverage.
+Plate quality control using negative and positive control coverage depth.
 
-For each amplicon on each plate, compute:
+Purpose: identify plates with elevated negative-control coverage depth relative to positive controls.
 
-    control_ratio = average negative-control coverage / average positive-control coverage
+Inputs: coverage table from 06_coveragetable.sh and sample metadata with plate, sample, and control-type fields.
 
-A high ratio is a sign of contamination. A plate is flagged for exclusion if
-more than half of its amplicons have a ratio above some cutoff.
+Outputs in `plateQC/`:
 
-Run this script in two steps: 
+* `control_coverage_ratios.csv` - mean coverage depth across negative and positive controls coverage, and their ratio, by amplicon and plate.
+* `control_coverage_ratios.png` - x-axis: plate; y-axis: control ratio. Each color is an amplicon; the red line marks `--cutoff` and shaded plates are EXCLUDE.
+* `control_ratio_elbow.png` - x-axis: ranked plate/amplicon ratio; y-axis: control ratio. The red line marks `--cutoff`.
+* `plate_qc_summary.csv` (with `--cutoff`) - failed-amplicon count and proportion, plus the KEEP or EXCLUDE result, by plate.
 
-  Step 1 - run with no --cutoff. This just plots the ratios so you can
-  look at them and decide where a sensible cutoff is.
+For command-line options and defaults, run:
 
-      python 07_plateQC.py --cov coverage.txt --meta metadata.csv
+    python 07_plateQC.py --help
 
-  Step 2 - once you've picked a cutoff (e.g. 0.02), rerun with it to get
-  the actual PASS/FAIL and KEEP/EXCLUDE calls.
+Run the script in two steps:
 
-      python 07_plateQC.py --cov coverage.txt --meta metadata.csv --cutoff 0.02
+    Step 1 - run with no --cutoff. This plots the ratios so you can
+    look at them and decide where a sensible cutoff is.
+
+        python 07_plateQC.py \
+        --amplicons AMA1_F_R CSP_F_R TRAP_F_R SERA2_F_R ACS82_2_F_2_R ACS8_6_F_R
+
+    Step 2 - once you've picked a cutoff (e.g. 0.02), rerun with it to get
+    the PASS/FAIL amplicon and KEEP/EXCLUDE plate calls.
+
+        python 07_plateQC.py \
+        --amplicons AMA1_F_R CSP_F_R TRAP_F_R SERA2_F_R ACS82_2_F_2_R ACS8_6_F_R \
+        --cutoff 0.02
 """
 
 import os
@@ -29,9 +40,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 
-# Fraction of amplicons that must pass
-# A plate is excluded if more than this fraction of its amplicons have 
-# coverage ratio over empirical threshold 
+# Fraction of amplicons that must pass --cutoff
+# Exclude plates when more than this fraction of selected amplicons fail.
 MAX_FAILED_FRACTION = 0.50
 
 
@@ -45,10 +55,7 @@ DEFAULT_RESULTS_DIR = OUTPUT_DIR / 'plateQC'
 # Step 1: compute the control_ratio for every plate/amplicon combination
 def compute_control_ratios(coverage_df, metadata_df, cutoff=None):
     """
-    Combine the coverage table and the metadata table, then compute the
-    negative/positive control ratio for every (plate, amplicon) pair.
-
-    cutoff: if given, also mark each row as PASS or FAIL
+    Calculate negative/positive control coverage ratios by plate and amplicon.
     """
 
     # Clean up the coverage table 
@@ -68,13 +75,9 @@ def compute_control_ratios(coverage_df, metadata_df, cutoff=None):
     # merge control metadata with their coverage values 
     merged_df = controls_df.merge(coverage_df, on="seq_sample_id", how="inner")
 
-    # For each plate + amplicon, compute the average coverage of
-    # the negative controls and the average coverage of the
-    # positive controls
+    # compute the average coverage of negative and positive controls per plate,amplicon
+    results = []
 
-    results = []  # list of dictionaries, one per plate, amplicon
-
-    # group by plate and amplicon
     grouped = merged_df.groupby(["plateID", "amplicon"])
 
     for (plate_id, amplicon), group in grouped:
@@ -111,12 +114,30 @@ def compute_control_ratios(coverage_df, metadata_df, cutoff=None):
     return ratios_df
 
 
+def select_amplicons(ratios_df, amplicon_ids):
+    """
+    Keep requested amplicons; error if any are absent.
+    """
+
+    if amplicon_ids is None:
+        return ratios_df
+
+    available_amplicons = set(ratios_df["amplicon"])
+    missing_amplicons = sorted(set(amplicon_ids) - available_amplicons)
+    if missing_amplicons:
+        raise ValueError(
+            "amplicon(s) not found: "
+            + ", ".join(missing_amplicons)
+        )
+
+    return ratios_df[ratios_df["amplicon"].isin(amplicon_ids)].copy()
+
+
 # Step 2: combine per-amplicon PASS/FAIL calls to a per-plate decision
 
 def summarize_plates(ratios_df):
     """
-    For each plate, count how many amplicons passed vs failed, and decide
-    whether the whole plate should be kept or excluded.
+    For each plate, count how many amplicons passed vs failed and mark plates as keep or exclude.
     """
 
     summary_rows = []
@@ -151,12 +172,10 @@ def summarize_plates(ratios_df):
 
 def plot_control_ratios(ratios_df, output_path, cutoff=None, summary_df=None):
     """
-    Scatter plot of control_ratio for every amplicon, grouped by plate.
-    If given, cutoff represented by dashed line.
+    Scatter plot of control_ratio (y-axis) for every amplicon, grouped by plate (x-axis).
     """
 
     plates = sorted(ratios_df["plateID"].unique())
-    # give each plate a number 
     plate_to_x = {plate: i for i, plate in enumerate(plates)}
 
     fig, ax = plt.subplots(figsize=(10, 6))
@@ -174,7 +193,6 @@ def plot_control_ratios(ratios_df, output_path, cutoff=None, summary_df=None):
             x = plate_to_x[plate]
             ax.axvspan(x - 0.45, x + 0.45, color="red", alpha=0.08)
 
-    # draw the cutoff line
     if cutoff is not None:
         ax.axhline(cutoff, color="red", linestyle="--", label="cutoff")
 
@@ -191,16 +209,16 @@ def plot_control_ratios(ratios_df, output_path, cutoff=None, summary_df=None):
     plt.close(fig)
 
 
-def plot_ratio_elbow(ratios_df, output_path):
+def plot_ratio_elbow(ratios_df, output_path, cutoff=None):
     """
-    Sorts every control_ratio from smallest to largest and plots it. 
+    y-axis: control_ratio; x-axis: amplicon,plate pair ranked low to high by control_ratio
     """
 
     # drop rows where we couldn't compute a ratio
     valid_ratios = ratios_df.dropna(subset=["control_ratio"])
     sorted_ratios = valid_ratios.sort_values("control_ratio").reset_index(drop=True)
 
-    # x-axis is just 1, 2, 3, ... one number per data point
+    # x-axis one number per data point
     x_values = range(1, len(sorted_ratios) + 1)
     y_values = sorted_ratios["control_ratio"]
 
@@ -211,6 +229,9 @@ def plot_ratio_elbow(ratios_df, output_path):
     for reference_value in [0.00, 0.01, 0.02, 0.03, 0.04, 0.05]:
         ax.axhline(reference_value, color="gray", linewidth=0.5, linestyle="--", zorder=0)
 
+    if cutoff is not None:
+        ax.axhline(cutoff, color="red", linestyle="--", linewidth=1.5)
+
     ax.set_xlabel("Rank (amplicon x plate, sorted by ratio)")
     ax.set_ylabel("Negative / positive control coverage ratio")
     ax.set_title("Control ratio elbow plot")
@@ -219,8 +240,6 @@ def plot_ratio_elbow(ratios_df, output_path):
     fig.savefig(output_path, dpi=300)
     plt.close(fig)
 
-
-# Main program
 
 if __name__ == "__main__":
 
@@ -233,16 +252,20 @@ if __name__ == "__main__":
     parser.add_argument("--results-dir", type=Path, default=DEFAULT_RESULTS_DIR,
                          help="Folder to write output files into")
     parser.add_argument("--cutoff", type=float, default=None,
-                         help="Ratio cutoff for PASS/FAIL. Leave blank to just "
-                              "make plots and pick a cutoff by eye.")
+                         help="Ratio cutoff for PASS/FAIL. Leave blank to "
+                              "evaluate plots and pick a cutoff.")
+    parser.add_argument("--amplicons", nargs="+", metavar="AMPLICON",
+                         help="Amplicons to include in evaluation. "
+                              "Leave blank to use all amplicons.")
     args = parser.parse_args()
 
-    # load the input files 
+    # load input files
     coverage_df = pd.read_csv(args.cov, sep="\t")
     metadata_df = pd.read_csv(args.meta)
 
     # control ratios computation
     ratios_df = compute_control_ratios(coverage_df, metadata_df, cutoff=args.cutoff)
+    ratios_df = select_amplicons(ratios_df, args.amplicons)
 
     # save the ratio table, sorted lowest ratio to highest 
     args.results_dir.mkdir(parents=True, exist_ok=True)
@@ -251,12 +274,12 @@ if __name__ == "__main__":
     ratios_df_sorted.to_csv(ratios_path, index=False)
 
     scatter_plot_path = args.results_dir / "control_coverage_ratios.png"
+    elbow_plot_path = args.results_dir / "control_ratio_elbow.png"
 
     if args.cutoff is None:
 
         plot_control_ratios(ratios_df, scatter_plot_path)
 
-        elbow_plot_path = args.results_dir / "control_ratio_elbow.png"
         plot_ratio_elbow(ratios_df, elbow_plot_path)
 
         print(f"Ratio table written to: {ratios_path}")
@@ -272,9 +295,11 @@ if __name__ == "__main__":
         summary_df.to_csv(summary_path, index=False)
 
         plot_control_ratios(ratios_df, scatter_plot_path, cutoff=args.cutoff, summary_df=summary_df)
+        plot_ratio_elbow(ratios_df, elbow_plot_path, cutoff=args.cutoff)
 
         print(summary_df[["plateID", "plate_status", "reason"]].to_string(index=False))
         print()
         print(f"Ratio table written to: {ratios_path}")
         print(f"Plate summary written to: {summary_path}")
         print(f"Scatter plot written to: {scatter_plot_path}")
+        print(f"Elbow plot written to: {elbow_plot_path}")

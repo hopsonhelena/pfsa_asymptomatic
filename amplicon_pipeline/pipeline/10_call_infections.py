@@ -1,4 +1,27 @@
-"""Call infections using chosen amplicons, coverage, and percent passing."""
+"""Call infections using chosen amplicons, coverage, and percent passing.
+
+Inputs:
+* Coverage table from 06_coveragetable.sh.
+* `filtered_samples.csv` from 08_filter_samples.py.
+
+For calling parameters and defaults, run:
+
+    python 10_call_infections.py --help
+
+Example:
+
+python 10_call_infections.py \
+  --amplicons ACS8_6_F_R SERA2_F_R AMA1_F_R \
+  --min-coverage 50 \
+  --percent-amplicons 100
+
+Outputs in `infection_calling/`:
+
+* `infection_calling_parameters.csv` - amplicons and thresholds used for calling.
+* `infection_calls.csv` - mean coverage at each calling amplicon and each
+  sample's infection status.
+
+"""
 
 import argparse
 import os
@@ -6,9 +29,16 @@ from pathlib import Path
 
 import pandas as pd
 
-DEFAULT_AMPLICONS = ['ACS8_6_F_R', 'SERA2_F_R', 'AMA1_F_R']
-DEFAULT_MIN_COVERAGE = 50
-DEFAULT_PERCENT_AMPLICONS = 100
+
+# Default infection-calling parameters
+# amplicons evaluated for each sample
+DEFAULT_AMPLICONS = ['ACS8_6_F_R', 'SERA2_F_R', 'AMA1_F_R'] 
+
+# minimum mean coverage depth required per amplicon.
+DEFAULT_MIN_COVERAGE = 50 
+
+# percentage of selected amplicons that must meet the minimum coverage
+DEFAULT_PERCENT_AMPLICONS = 100 
 
 # input and output (exported by config.sh)
 OUTPUT_DIR = Path(os.environ['OUTPUT_DIR'])
@@ -77,4 +107,3 @@ if __name__ == '__main__':
     print(f'Amplicons required: {args.percent_amplicons}%')
     print(infection_calls['infection_status'].value_counts().to_string())
     print(f'Results written to: {RESULTS_DIR}')
-

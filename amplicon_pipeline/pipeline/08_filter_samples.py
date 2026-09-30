@@ -1,4 +1,15 @@
-"""Apply sample QC filters and output samples used for downstream analysis."""
+"""Filter samples for downstream infection analysis.
+
+Inputs:
+* Coverage table from 06_coveragetable.sh.
+* Metadata
+* Plate QC summary from 07_plateQC.py.
+* Optional lists of samples to exclude.
+
+Output in `infection_calling/`:
+* `filtered_samples.csv` - sample IDs retained after filters (control, plate QC,
+  HbS coverage, metadata, and duplicate-pairs).
+"""
 
 import os 
 from pathlib import Path
@@ -9,11 +20,13 @@ import pandas as pd
 HBS_AMPLICON = 'HBS_F_R'
 MIN_HBS_COVERAGE = 10
 
-# input and output
+# output
 OUTPUT_DIR = Path(os.environ['OUTPUT_DIR'])
+
+# inputs 
 COVERAGE_TABLE = Path(os.environ['COVERAGE_TABLE'])
 METADATA = Path(os.environ['METADATA'])
-# optional filter lists: leave unset, point to a missing file, or use an empty file to skip
+# optional filter lists: will skip if file is not there
 NO_METADATA_LIST = os.environ.get('NO_METADATA_LIST', '')
 DUPLICATES_LIST = os.environ.get('DUPLICATES_LIST', '')
 PLATE_QC = OUTPUT_DIR / 'plateQC' / 'plate_qc_summary.csv'
@@ -24,15 +37,13 @@ def report_filter(step, description, before, after):
     print(f'Step {step} - {description}: {after}/{before} samples kept ({before - after} removed)')
 
 
-def load_optional_list(path, name):
-    """Read an optional CSV filter list; return None if it is unset, missing or empty."""
-    if not path or not Path(path).is_file():
-        print(f'Note: {name} not provided, skipping that filter')
+def load_optional_list(path):
+    """Read an optional CSV filter list; return None if unavailable or empty."""
+    if not Path(path).is_file():
         return None
     try:
         return pd.read_csv(path)
     except pd.errors.EmptyDataError:
-        print(f'Note: {name} is empty, skipping that filter')
         return None
 
 
@@ -40,8 +51,8 @@ if __name__ == '__main__':
     coverage = pd.read_csv(COVERAGE_TABLE, sep='\t')
     metadata = pd.read_csv(METADATA)
     plate_qc = pd.read_csv(PLATE_QC)
-    no_metadata = load_optional_list(NO_METADATA_LIST, 'NO_METADATA_LIST')
-    duplicates = load_optional_list(DUPLICATES_LIST, 'DUPLICATES_LIST')
+    no_metadata = load_optional_list(NO_METADATA_LIST)
+    duplicates = load_optional_list(DUPLICATES_LIST)
 
     coverage = coverage.rename(columns={'sample': 'seq_sample_id'})
     coverage['seq_sample_id'] = coverage['seq_sample_id'].astype(str)
@@ -92,4 +103,3 @@ if __name__ == '__main__':
     output_path = RESULTS_DIR / 'filtered_samples.csv'
     pd.DataFrame({'seq_sample_id': sorted(ids)}).to_csv(output_path, index=False)
     print(f'QC-passed sample list written to: {output_path}')
-
