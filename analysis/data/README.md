@@ -1,7 +1,7 @@
 # Analysis data
 
 - `analysis_metadata.tsv`: reduced Supplementary Table 9 containing the
-  metadata used by the figure scripts, including HbS and Pfsa genotypes, variant allele fractions, village, and season.
+  metadata used by the figure scripts, including HbS and Pfsa genotypes and variant allele fractions.
 - `*.sample`: Sample data including phenotypes and covariates input to SNPTEST association scripts. 
   - `cameroon_1701_infected_samples.sample` - used for association tests between HbS and phenotypes in infected samples: complexity of infection, polyclonality, and parasitemia  
   - `cameroon_2246_samples.sample` - used for association tests between HbS and phenotypes in full analysis set: infection status, carriage of gametocytes (mosquito transmissible parasites)
