@@ -1,7 +1,9 @@
-# Amplicon sequencing workflow and human-P.falciparum genetic association analysis
+# Sickle cell status and malaria parasite genotype in asymptomatic infections
 
-Code accompanying Hopson HD, et al. “Sickle cell status skews malaria parasite genotype at
-infection.” *bioRxiv* (2025). [doi:10.1101/2025.09.09.675015](https://doi.org/10.1101/2025.09.09.675015)
+Code for processing and analyzing amplicon sequencing data from Hopson, H.D., Herbert-Mainero, A.,
+Bouopda-Tuedom, A.G. et al. “Sickle cell haemoglobin status shapes malaria parasite genotype in
+asymptomatic infections.” *Nat Microbiol* (2026).
+[doi:10.1038/s41564-026-02502-4](https://doi.org/10.1038/s41564-026-02502-4)
 
 Amplicon sequencing of 2,246 dried blood spots from asymptomatic children in Mfou, Cameroon, 
 targeting human variants associated with malaria (including the sickle cell allele) and *P. falciparum* loci including the sickle-associated (Pfsa) alleles. 

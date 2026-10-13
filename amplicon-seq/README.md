@@ -2,7 +2,7 @@
 
 Workflow for processing multiplexed amplicon sequencing data targeting human and
 *Plasmodium falciparum* (Pf) loci, applied to 2,246 samples from Cameroon in
-[Hopson et al. (2025)](https://doi.org/10.1101/2025.09.09.675015).
+[Hopson et al. (2026)](https://doi.org/10.1038/s41564-026-02502-4).
 
 **Workflow**
 
