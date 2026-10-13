@@ -1,11 +1,11 @@
-# Pipeline configuration. Sourced by all scripts: 
+# Workflow configuration. Sourced by all scripts: 
 # source ./config.sh 
 # Edit the settings under "Edit these". Everything below it is derived
 # or fixed and should not need changing.
 
 export PROJECT_DIR="$PWD"       
-[[ -d "${PROJECT_DIR}/pipeline" ]] || {
-    echo "config.sh: run from amplicon_pipeline/ (PROJECT_DIR=$PROJECT_DIR)" >&2
+[[ -d "${PROJECT_DIR}/workflow" ]] || {
+    echo "config.sh: run from amplicon-seq/ (PROJECT_DIR=$PROJECT_DIR)" >&2
 }                             
 
 ### Edit these ###

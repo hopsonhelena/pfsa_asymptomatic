@@ -1,4 +1,4 @@
-name: amplicon-pipeline
+name: amplicon-seq
 channels:
   - conda-forge
   - bioconda

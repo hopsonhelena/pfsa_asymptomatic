@@ -1,6 +1,6 @@
-# Amplicon sequencing pipeline
+# Amplicon sequencing workflow
 
-Pipeline for processing multiplexed amplicon sequencing data targeting human and
+Workflow for processing multiplexed amplicon sequencing data targeting human and
 *Plasmodium falciparum* (Pf) loci, applied to 2,246 samples from Cameroon in
 [Hopson et al. (2025)](https://doi.org/10.1101/2025.09.09.675015).
 
@@ -19,12 +19,12 @@ Pipeline for processing multiplexed amplicon sequencing data targeting human and
 
 ### Reference genome
 
-The pipeline aligns to a single FASTA containing both genomes:
+The workflow aligns to a single FASTA containing both genomes:
 
 - Human: [GRCh38 primary assembly, Ensembl release 108](https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz)
 - Parasite: [Plasmodium falciparum 3D7, PlasmoDB release 62](https://plasmodb.org/a/service/raw-files/release-62/Pfalciparum3D7/fasta/data/PlasmoDB-62_Pfalciparum3D7_Genome.fasta)
 
-Concatenate the two FASTA files before running the pipeline, and set `REF` in
+Concatenate the two FASTA files before running the workflow, and set `REF` in
 `config.sh` to the result. Contig names must match those in `data/bed/`.
 
 ### Inputs
@@ -58,13 +58,13 @@ Edit `config.sh`:
 
 ## Quick start
 
-Run from `amplicon_pipeline/` after editing `config.sh`.
+Run from `amplicon-seq/` after editing `config.sh`.
 
 ### 1. Set up the environment
 
 ```bash
 conda env create -f environment.yml
-conda activate amplicon-pipeline
+conda activate amplicon-seq
 source ./config.sh
 ```
 
@@ -88,20 +88,20 @@ Wait for this step to finish and create `output/all_runs_mean_coverage.txt`.
 Summarize and plot coverage depth across controls:
 
 ```bash
-python pipeline/07_plateQC.py
+python workflow/07_plateQC.py
 ```
 
 Select a cutoff based on plots, then filter samples:
 
 ```bash
-python pipeline/07_plateQC.py --cutoff 0.02
-python pipeline/08_filter_samples.py
+python workflow/07_plateQC.py --cutoff 0.02
+python workflow/08_filter_samples.py
 ```
 
 ### 4. Select parameters for infection calling
 
 ```bash
-python pipeline/09_select_infection_parameters.py
+python workflow/09_select_infection_parameters.py
 ```
 
 Inspect the outputs and select the amplicons, minimum coverage depth, and
@@ -110,7 +110,7 @@ percentage of passing amplicons to use in the next step.
 ### 5. Call infections
 
 ```bash
-python pipeline/10_call_infections.py \
+python workflow/10_call_infections.py \
     --amplicons ACS8_6_F_R SERA2_F_R AMA1_F_R --min-coverage 50 \
     --percent-amplicons 100
 ```
@@ -124,11 +124,11 @@ bash submit_variant_calling.sh
 ## Repository layout
 
 ```
-config.sh                     pipeline settings
+config.sh                     workflow settings
 environment.yml
 submit_alignment.sh           submits scripts 01–06 to Slurm with job dependencies
 submit_variant_calling.sh     submits scripts 11–14 to Slurm; run after scripts 07–10
-pipeline/                     numbered scripts, one per step
+workflow/                     numbered scripts, one per step
 data/
   bed/                        human_pf_amplicons.bed (all amplicons) and one <amplicon>.bed per amplicon
   sample_metadata_template.csv   template for sample metadata
@@ -147,7 +147,7 @@ logs/                          stdout/stderr
 ```
 
 
-## Pipeline steps
+## Workflow steps
 
 ### FASTQ processing and coverage: scripts 01–06
 

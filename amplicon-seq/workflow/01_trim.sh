@@ -12,7 +12,7 @@ set -euo pipefail
 source "./config.sh"
 set +u
 eval "$(conda shell.bash hook)"
-conda activate amplicon-pipeline
+conda activate amplicon-seq
 set -u
 
 # Select run from slurm arrray

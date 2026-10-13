@@ -1,11 +1,11 @@
-# FASTQ-to-VCF pipeline: local inputs and generated outputs
-amplicon_pipeline/data/*.csv
-!amplicon_pipeline/data/sample_metadata_template.csv
-amplicon_pipeline/data/runs/
-amplicon_pipeline/output/
-amplicon_pipeline/logs/
-amplicon_pipeline/**/__pycache__/
-amplicon_pipeline/**/*.pyc
+# FASTQ-to-VCF workflow: local inputs and generated outputs
+amplicon-seq/data/*.csv
+!amplicon-seq/data/sample_metadata_template.csv
+amplicon-seq/data/runs/
+amplicon-seq/output/
+amplicon-seq/logs/
+amplicon-seq/**/__pycache__/
+amplicon-seq/**/*.pyc
 
 # analysis
 .DS_Store
