@@ -5,6 +5,8 @@
 #SBATCH --out=logs/s-%x.%A_%a.out
 #SBATCH --error=logs/s-%x.%A_%a.err
 
+# Slurm array job: one task per sequencing run in ALL_RUNS. Submit with submit_alignment.sh
+
 set -euo pipefail
 
 source "./config.sh"
@@ -14,7 +16,7 @@ conda activate amplicon-seq
 set -u
 
 # Select run from slurm array
-run=${ALL_RUNS[$SLURM_ARRAY_TASK_ID]}
+run=${ALL_RUNS[${SLURM_ARRAY_TASK_ID:-$1}]}
 
 DEPTH_DIR="${WORK_DIR}/${run}/${DEPTH_SUBDIR}"
 BED_FILE="${BED_DIR}/human_pf_amplicons.bed"

@@ -27,7 +27,7 @@ The association analyses require [SNPTEST 2.5.2](https://mathgen.stats.ox.ac.uk/
 
 ## Association tests
 
-From this directory (`analysis/`), run:
+From this directory (`paper-analysis/`), run:
 
 ```bash
 bash scripts/association/run_hptest.sh

@@ -6,6 +6,8 @@
 #SBATCH --out=logs/s-%x.%A_%a.out
 #SBATCH --error=logs/s-%x.%A_%a.err
 
+# Slurm array job: one task per sequencing run in ALL_RUNS. Submit with submit_alignment.sh
+
 set -euo pipefail
 
 source "./config.sh"
@@ -15,7 +17,7 @@ conda activate amplicon-seq
 set -u
 
 # Select run from slurm array
-run=${ALL_RUNS[$SLURM_ARRAY_TASK_ID]}
+run=${ALL_RUNS[${SLURM_ARRAY_TASK_ID:-$1}]}
 
 TRIMMED_DIR="${WORK_DIR}/${run}/${TRIMMED_SUBDIR}"
 BAM_DIR="${WORK_DIR}/${run}/${BAM_SUBDIR}"
@@ -33,7 +35,7 @@ for r2 in "${TRIMMED_DIR}/${run%R}X"*_R2_001.cutadapt.fastq.gz; do
 
     echo "Aligning sample: $sample"
 
-    bwa mem -M -t "$SLURM_CPUS_PER_TASK" "$REF" \
+    bwa mem -M -t "${SLURM_CPUS_PER_TASK:-$THREADS}" "$REF" \
         "$r1" \
         "$r2" \
         | samtools sort -o "$bam"

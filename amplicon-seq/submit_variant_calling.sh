@@ -11,9 +11,9 @@ export SBATCH_KILL_INV_DEP=yes
 SLURM_OPTS=(--account="${SLURM_ACCOUNT}" --partition="${SLURM_PARTITION}") # use when no slurm array
 
 
-bash workflow/11_list_bams.sh
-human=$(sbatch "${SLURM_OPTS[@]}" --parsable workflow/12_call_human_variants.sh)
-parasite=$(sbatch "${SLURM_OPTS[@]}" --parsable workflow/13_call_parasite_variants.sh)
-sbatch "${SLURM_OPTS[@]}" --dependency=afterok:$human:$parasite workflow/14_format_vcf.sh
+bash scripts/11_list_bams.sh
+human=$(sbatch "${SLURM_OPTS[@]}" --parsable scripts/12_call_human_variants.sh)
+parasite=$(sbatch "${SLURM_OPTS[@]}" --parsable scripts/13_call_parasite_variants.sh)
+sbatch "${SLURM_OPTS[@]}" --dependency=afterok:$human:$parasite scripts/14_format_vcf.sh
 
 echo "Submitted: human=$human parasite=$parasite"

@@ -13,5 +13,5 @@ amplicon-seq/**/*.pyc
 .RData
 .Rproj.user/
 *.Rproj
-analysis/results/association/hptest/logs/
-analysis/results/association/snptest/logs/
+paper-analysis/results/association/hptest/logs/
+paper-analysis/results/association/snptest/logs/

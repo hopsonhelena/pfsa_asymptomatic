@@ -6,15 +6,17 @@ Workflow for processing multiplexed amplicon sequencing data targeting human and
 
 **Workflow**
 
-1. **Process, align, and count** (scripts 01-06): FASTQ files to coverage depth summaries.
+1. **Alignment** (scripts 00-06): FASTQ files to coverage depth summaries.
 2. **QC and infection calling** (scripts 07-10): use coverage depth to flag plates, filter samples, and call infections.
 3. **Variant calling** (scripts 11-14): perform joint variant calling across human and Pf amplicons.
+
+The workflow is a set of numbered bash and Python scripts that can be run via Slurm/HPC or locally. Alignment and variant calling steps are run with a single command; the QC and infection-calling steps in between are run one at a time because they involve choosing thresholds.
 
 ## Setup
 
 ### Requirements
 
-- Slurm, conda (conda must be on your PATH)
+- conda (must be on your PATH)
 - Tools (cutadapt, FastQC, MultiQC, bwa, samtools, bcftools) and Python packages (pandas, matplotlib, scipy), all specified in `environment.yml`
 
 ### Reference genome
@@ -38,7 +40,7 @@ data/runs/24118R/Fastq/24118X100_..._R{1,2}_001.fastq.gz
 Reads for this study are deposited in the NCBI SRA under BioProject
 [PRJNA1503656](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA1503656).
 
-Copy `data/sample_metadata_template.csv` to `data/sample_metadata.csv` and add one row per sample.
+Copy `data/sample_metadata_template.csv` to `data/sample_metadata.csv` with one row per sample.
 Columns:
 
 - `seq_sample_id` - FASTQ file name up to the first `_` (e.g. 24118X100)
@@ -53,10 +55,14 @@ Edit `config.sh`:
 
 - `REF` - path to the concatenated reference (see above)
 - `ALL_RUNS` - names of the run folders inside `data/runs/`, e.g. 24118R
-- `SLURM_ACCOUNT`, `SLURM_PARTITION` - cluster account and partition
 - `DATA_DIR` - FASTQ files, in subfolders by sequencing run (default `data/runs/`)
 
-## Quick start
+### Running with Slurm or locally
+
+- **With Slurm**: set `SLURM_ACCOUNT` and `SLURM_PARTITION` in `config.sh`. The `submit_*.sh` wrappers submit each script to Slurm, using job arrays to process sequencing runs in parallel.
+- **Locally**: the `run_*_local.sh` wrappers run each script in order.
+
+## Usage
 
 Run from `amplicon-seq/` after editing `config.sh`.
 
@@ -68,17 +74,18 @@ conda activate amplicon-seq
 source ./config.sh
 ```
 
-Create the BWA and samtools indexes:
-
-```bash
-bwa index "$REF"
-samtools faidx "$REF"
-```
-
 ### 2. Process FASTQ files and calculate coverage
+
+With Slurm:
 
 ```bash
 bash submit_alignment.sh
+```
+
+Locally:
+
+```bash
+bash run_alignment_local.sh
 ```
 
 Wait for this step to finish and create `output/all_runs_mean_coverage.txt`.
@@ -88,20 +95,20 @@ Wait for this step to finish and create `output/all_runs_mean_coverage.txt`.
 Summarize and plot coverage depth across controls:
 
 ```bash
-python workflow/07_plateQC.py
+python scripts/07_plateQC.py
 ```
 
 Select a cutoff based on plots, then filter samples:
 
 ```bash
-python workflow/07_plateQC.py --cutoff 0.02
-python workflow/08_filter_samples.py
+python scripts/07_plateQC.py --cutoff 0.02
+python scripts/08_filter_samples.py
 ```
 
 ### 4. Select parameters for infection calling
 
 ```bash
-python workflow/09_select_infection_parameters.py
+python scripts/09_select_infection_parameters.py
 ```
 
 Inspect the outputs and select the amplicons, minimum coverage depth, and
@@ -110,15 +117,23 @@ percentage of passing amplicons to use in the next step.
 ### 5. Call infections
 
 ```bash
-python workflow/10_call_infections.py \
+python scripts/10_call_infections.py \
     --amplicons ACS8_6_F_R SERA2_F_R AMA1_F_R --min-coverage 50 \
     --percent-amplicons 100
 ```
 
 ### 6. Call human and parasite variants
 
+With Slurm:
+
 ```bash
 bash submit_variant_calling.sh
+```
+
+Locally:
+
+```bash
+bash run_variant_calling_local.sh
 ```
 
 ## Repository layout
@@ -126,9 +141,11 @@ bash submit_variant_calling.sh
 ```
 config.sh                     workflow settings
 environment.yml
-submit_alignment.sh           submits scripts 01–06 to Slurm with job dependencies
+submit_alignment.sh           submits scripts 00–06 to Slurm with job dependencies
 submit_variant_calling.sh     submits scripts 11–14 to Slurm; run after scripts 07–10
-workflow/                     numbered scripts, one per step
+run_alignment_local.sh        runs scripts 00–06 in order locally
+run_variant_calling_local.sh  runs scripts 11–14 in order locally; run after scripts 07–10
+scripts/                      numbered scripts, one per step
 data/
   bed/                        human_pf_amplicons.bed (all amplicons) and one <amplicon>.bed per amplicon
   sample_metadata_template.csv   template for sample metadata
@@ -149,10 +166,11 @@ logs/                          stdout/stderr
 
 ## Workflow steps
 
-### FASTQ processing and coverage: scripts 01–06
+### FASTQ processing and coverage: scripts 00–06
 
-Run with `bash submit_alignment.sh`.
+Run with `bash submit_alignment.sh` (Slurm) or `bash run_alignment_local.sh` (locally).
 
+- `00_index.sh` - creates the BWA and samtools indexes for the reference if missing. Output: index files next to `REF`
 - `01_trim.sh` - trims adapters with cutadapt. Output: `output/runs/<run>/trimmed.fastq/`
 - `02_fastqc.sh` - assesses trimmed-read quality. Output: `output/runs/<run>/fastqc/`
 - `02b_multiqc.sh` - combines FastQC reports. Output: `output/multiqc/`
@@ -178,7 +196,7 @@ Outputs are written to `output/plateQC/` and
 
 ### Variant calling: scripts 11–14
 
-Run with `bash submit_variant_calling.sh`.
+Run with `bash submit_variant_calling.sh` (Slurm) or `bash run_variant_calling_local.sh` (locally).
 
 - `11_list_bams.sh` - creates BAM lists for all QC-passed samples and infected
   samples.

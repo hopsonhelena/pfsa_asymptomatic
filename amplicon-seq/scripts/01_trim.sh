@@ -7,6 +7,8 @@
 #SBATCH --out=logs/s-%x.%A_%a.out
 #SBATCH --error=logs/s-%x.%A_%a.err
 
+# Slurm array job: one task per sequencing run in ALL_RUNS. Submit with submit_alignment.sh
+
 set -euo pipefail
 
 source "./config.sh"
@@ -16,7 +18,7 @@ conda activate amplicon-seq
 set -u
 
 # Select run from slurm arrray
-run=${ALL_RUNS[$SLURM_ARRAY_TASK_ID]}
+run=${ALL_RUNS[${SLURM_ARRAY_TASK_ID:-$1}]}
 
 FASTQ_DIR="${DATA_DIR}/${run}/${FASTQ_SUBDIR}"
 TRIMMED_DIR="${WORK_DIR}/${run}/${TRIMMED_SUBDIR}"
@@ -31,7 +33,7 @@ for r1 in "${FASTQ_DIR}/${run%R}X"*_R1_001.fastq.gz; do
     r2="${FASTQ_DIR}/${sample}_R2_001.fastq.gz"
 
     cutadapt \
-        -j "$SLURM_CPUS_PER_TASK" \
+        -j "${SLURM_CPUS_PER_TASK:-$THREADS}" \
         -m "$MIN_LENGTH" \
         -a "$ADAPTER_R1" \
         -A "$ADAPTER_R2" \

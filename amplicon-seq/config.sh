@@ -4,7 +4,7 @@
 # or fixed and should not need changing.
 
 export PROJECT_DIR="$PWD"       
-[[ -d "${PROJECT_DIR}/workflow" ]] || {
+[[ -d "${PROJECT_DIR}/scripts" ]] || {
     echo "config.sh: run from amplicon-seq/ (PROJECT_DIR=$PROJECT_DIR)" >&2
 }                             
 
@@ -23,6 +23,9 @@ ALL_RUNS=(24118R 24404R 24448R 24466R 24494R 24538R 25579R 25631R)
 # SLURM options
 SLURM_ACCOUNT="EDIT: your Slurm account"
 SLURM_PARTITION="EDIT: your Slurm partition"
+
+# Threads per step when running locally
+THREADS=4
 
 # Folder containing the sequencing run folders. Edit if your FASTQs are outside the repository
 export DATA_DIR="${PROJECT_DIR}/data/runs"

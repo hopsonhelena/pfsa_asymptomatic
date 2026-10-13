@@ -12,12 +12,12 @@ targeting human variants associated with malaria (including the sickle cell alle
 
 ```text
 amplicon-seq/         FASTQ processing, QC, infection calling, variant calling (human and P. falciparum)
-analysis/             Manuscript analyses and figures
+paper-analysis/       Manuscript analyses and figures
 ```
 
-See [`amplicon-seq/README.md`](amplicon-seq/README.md) and [`analysis/README.md`](analysis/README.md)
+See [`amplicon-seq/README.md`](amplicon-seq/README.md) and [`paper-analysis/README.md`](paper-analysis/README.md)
 
-The variant calls output from `amplicon-seq/` are used in `analysis/`: 
+The variant calls output from `amplicon-seq/` are used in `paper-analysis/`: 
 
 - Human: `amplicon-seq/output/human/<amplicon>.human.filtered.final.vcf.gz`
 - *P. falciparum*: `amplicon-seq/output/parasite/pf.all.filtered.final.vcf.gz`
